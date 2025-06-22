@@ -21,7 +21,7 @@ export default function HomePage() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [zipFile, setZipFile] = useState<File | null>(null);
 
-  const API_BASE_URL = 'http://localhost:8000';
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000';
 
   const handleUpload = async () => {
     if (!zipFile) {

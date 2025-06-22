@@ -19,45 +19,66 @@ Application that allows users to upload a folder and use natural language prompt
 
 ```mermaid
 graph TB
-    subgraph "Frontend Layer"
-        UI["Next.js Web App<br/>- File Upload Interface<br/>- Natural Language Prompt Input<br/>- File Tree Display<br/>- Project Download"]
+    subgraph "Frontend"
+        UI["Next.js Web App<br/>File Upload & Prompts"]
     end
     
-    subgraph "Backend API Layer"
-        API["FastAPI Server<br/>- File Upload Handler<br/>- Session Management<br/>- Prompt Handler<br/>- Download Handler"]
+    subgraph "Backend API"
+        API["FastAPI Server<br/>Session Management"]
     end
     
-    subgraph "AI & MCP Layer"
-        MCP_CLIENT["MCP Client<br/>- Tool Discovery<br/>- Tool Execution<br/>- Response Handling"]
-        CLAUDE["Claude AI<br/>- Natural Language Understanding<br/>- Tool Selection<br/>- Command Generation"]
-        MCP_SERVER["MCP File Server<br/>- create_file()<br/>- edit_file()<br/>- delete_file()"]
+    subgraph "AI Layer"
+        MCP["MCP Client<br/>Tool Execution"]
+        CLAUDE["Claude AI<br/>Natural Language Processing"]
+        SERVER["File Server<br/>create_file(), edit_file(), delete_file()"]
     end
     
-    subgraph "Storage Layer"
-        WORKSPACES["File Workspaces<br/>- Session-based directories<br/>- Uploaded project files<br/>- Modified files"]
+    subgraph "Storage"
+        FILES["Workspace Files<br/>Project Directory"]
     end
     
-    UI -->|"HTTP Requests<br/>(upload/prompt/download)"| API
-    API -->|"Natural Language Prompt"| MCP_CLIENT
-    MCP_CLIENT -->|"Tool Schema & Prompt"| CLAUDE
-    CLAUDE -->|"Tool Calls & Instructions"| MCP_CLIENT
-    MCP_CLIENT -->|"Execute Tools"| MCP_SERVER
-    MCP_SERVER -->|"File Operations"| WORKSPACES
-    API -->|"File Storage/Retrieval"| WORKSPACES
+    UI <-->|"HTTP Requests"| API
+    API -->|"User Prompt"| MCP
+    MCP <-->|"Tool Calls"| CLAUDE
+    MCP -->|"Execute Tools"| SERVER
+    SERVER <-->|"File Operations"| FILES
+    API <-->|"File Management"| FILES
     
-    API -->|"Response & File Tree"| UI
-    MCP_SERVER -->|"Tool Results"| MCP_CLIENT
-    MCP_CLIENT -->|"Execution Results"| API
-    
-    style UI fill:#e1f5fe
-    style API fill:#f3e5f5
-    style MCP_CLIENT fill:#fff3e0
-    style CLAUDE fill:#e8f5e8
-    style MCP_SERVER fill:#fff3e0
-    style WORKSPACES fill:#fce4ec
+    style UI fill:#87CEEB,color:#000
+    style API fill:#98FB98,color:#000
+    style MCP fill:#FFB6C1,color:#000
+    style CLAUDE fill:#F0E68C,color:#000
+    style SERVER fill:#DDA0DD,color:#000
+    style FILES fill:#FFA07A,color:#000
 ```
 
-## Setup
+## Running the Application
+
+### 1. Using Docker
+
+- Prerequisites: Docker and Docker Compose should be installed.
+
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/aditya-borse/mcp.git
+    cd mcp
+    ```
+
+2.  **Create a .env file**
+    ```bash
+    cd server
+    cp .env.example .env
+    ```
+    Fill in the values for the environment variables.
+
+3.  **Build and run the containers:**
+    ```bash
+    cd ..
+    docker compose up --build
+    ```
+    The application will be available at `http://localhost:3000`.
+
+### 2. Manually 
 
 1.  **Clone the repository:**
     ```bash
@@ -86,21 +107,19 @@ graph TB
     npm install
     ```
 
-## Run
-
-1.  **Start the Backend Server:**
+5.  **Start the Backend Server:**
     ```bash
     cd server
     uvicorn main:app --reload
     ```
     The backend will be available at `http://localhost:8000`.
 
-2.  **Start the Frontend Server:**
+6.  **Start the Frontend Server:**
     ```bash
     cd frontend
     npm run dev
     ```
     The frontend will be available at `http://localhost:3000`.
 
-3.  **Use the Application:**
+7.  **Use the Application:**
     Open `http://localhost:3000` in your browser, upload a `.zip` file, and start giving commands to the agent.

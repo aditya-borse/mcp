@@ -1,0 +1,10 @@
+Dockerfile
+.dockerignore
+node_modules
+.next
+build
+coverage
+out
+.env*
+.DS_Store
+npm-debug.log*
