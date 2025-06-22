@@ -2,6 +2,9 @@
 
 Application that allows users to upload a folder and use natural language prompts to perform filesystem operations (create, edit, delete). 
 
+## Video Demo 
+[Check out the demo on Youtube](https://youtu.be/XFnAwdAtG_k)
+
 ## Tech Stack
 
 *   **Frontend**: Next.js
