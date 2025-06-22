@@ -3,8 +3,6 @@ import zipfile
 import shutil
 from pathlib import Path
 from typing import List, Dict
-import subprocess
-import asyncio
 from mcp.client.stdio import stdio_client
 from mcp import ClientSession, StdioServerParameters
 import anthropic
@@ -12,7 +10,9 @@ from fastapi import FastAPI, UploadFile, HTTPException
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from dotenv import load_dotenv
 
+load_dotenv()
 app = FastAPI()
 
 WORKSPACES_DIR = Path("workspaces")
@@ -155,7 +155,16 @@ async def handle_prompt(session_id: str, request: PromptRequest):
             await mcp_client.initialize()
 
             tools_response = await mcp_client.list_tools()
-            available_tools = [tool.model_dump() for tool in tools_response.tools]
+            claude_tools = []
+            for tool in tools_response.tools:
+                tool_dict = tool.model_dump()
+                claude_tools.append(
+                    {
+                        "name": tool_dict["name"],
+                        "description": tool_dict["description"],
+                        "input_schema": tool_dict["inputSchema"],
+                    }
+                )
 
             system_prompt = "You are a helpful assistant with access to a file system. You can create, edit, read, and delete files. Use the available tools to help the user with their requests."
 
@@ -166,7 +175,7 @@ async def handle_prompt(session_id: str, request: PromptRequest):
                 max_tokens=1024,
                 system=system_prompt,
                 messages=messages,
-                tools=available_tools,
+                tools=claude_tools,
             )
 
             response_parts = []
