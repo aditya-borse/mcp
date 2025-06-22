@@ -20,7 +20,7 @@ Application that allows users to upload a folder and use natural language prompt
 ```mermaid
 graph TB
     subgraph "Frontend"
-        UI["Next.js Web App<br/>File Upload & Prompts"]
+        UI["Next.js Web App<br/>File Upload and Prompts Submission"]
     end
     
     subgraph "Backend API"
@@ -30,7 +30,7 @@ graph TB
     subgraph "AI Layer"
         MCP["MCP Client<br/>Tool Execution"]
         CLAUDE["Claude AI<br/>Natural Language Processing"]
-        SERVER["File Server<br/>create_file(), edit_file(), delete_file()"]
+        SERVER["MCP Server<br/>create_file(), edit_file(), delete_file()"]
     end
     
     subgraph "Storage"
